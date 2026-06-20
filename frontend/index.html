@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopEasy Support</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo { font-size: 1.2rem; font-weight: 700; color: #38bdf8; }
+    .logo span { color: #e2e8f0; }
+
+    .header-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-left: 16px;
+      transition: color .2s;
+    }
+    .header-links a:hover { color: #38bdf8; }
+
+    .new-chat-btn {
+      background: none;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all .2s;
+      margin-left: 16px;
+    }
+    .new-chat-btn:hover { border-color: #38bdf8; color: #38bdf8; }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .msg {
+      display: flex;
+      gap: 10px;
+      max-width: 85%;
+      animation: fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .msg.agent .avatar { background: #0369a1; color: #fff; }
+    .msg.user .avatar { background: #7c3aed; color: #fff; }
+
+    .bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .msg.agent .bubble { background: #1e293b; border: 1px solid #334155; border-top-left-radius: 4px; }
+    .msg.user .bubble { background: #4f46e5; border-top-right-radius: 4px; }
+
+    .typing .bubble {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      padding: 14px 18px;
+    }
+
+    .dot {
+      width: 8px; height: 8px;
+      background: #64748b;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .dot:nth-child(2) { animation-delay: .2s; }
+    .dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px); } }
+
+    .input-area {
+      border-top: 1px solid #334155;
+      padding: 16px 0 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    #userInput {
+      flex: 1;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.92rem;
+      resize: none;
+      outline: none;
+      max-height: 140px;
+      transition: border-color .2s;
+    }
+    #userInput:focus { border-color: #38bdf8; }
+    #userInput::placeholder { color: #475569; }
+
+    .btn {
+      background: #0369a1;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background .2s, transform .1s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover { background: #0284c7; }
+    .btn:active { transform: scale(.97); }
+
+    #micBtn {
+      background: #1e293b;
+      border: 1px solid #334155;
+    }
+    #micBtn:hover { background: #334155; }
+    #micBtn.recording { background: #dc2626; border-color: #dc2626; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,.4); } 50% { box-shadow: 0 0 0 8px rgba(220,38,38,0); } }
+
+    .voice-status {
+      font-size: 0.75rem;
+      color: #64748b;
+      text-align: center;
+      min-height: 18px;
+      margin-top: -8px;
+      margin-bottom: 4px;
+    }
+    .voice-status.active { color: #f87171; }
+
+    #sessionInfo {
+      font-size: 0.72rem;
+      color: #475569;
+      text-align: right;
+      padding: 4px 0;
+    }
+
+    .quick-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 8px 0;
+    }
+    .quick-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .quick-btn:hover { background: #334155; color: #e2e8f0; border-color: #475569; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Shop<span>Easy</span> Support</div>
+    <div class="header-links">
+      <a href="/admin" target="_blank">⚙ Admin Dashboard</a>
+      <button class="new-chat-btn" onclick="newChat()">＋ New Chat</button>
+    </div>
+  </header>
+
+  <div class="chat-container">
+    <div id="sessionInfo"></div>
+    <div id="messages"></div>
+
+    <div class="quick-btns" id="quickBtns">
+      <button class="quick-btn" onclick="sendQuick('I want to request a refund for order ORD-1001')">Refund ORD-1001</button>
+      <button class="quick-btn" onclick="sendQuick('I want a refund for order ORD-1003 — it was purchased over 90 days ago')">Expired Window</button>
+      <button class="quick-btn" onclick="sendQuick('I want a refund for order ORD-1004. My email is david.lee@email.com')">Flagged Account</button>
+      <button class="quick-btn" onclick="sendQuick('What is your refund policy?')">Refund Policy</button>
+    </div>
+
+    <div class="voice-status" id="voiceStatus"></div>
+
+    <div class="input-area">
+      <textarea id="userInput" rows="1" placeholder="Type your message or use the mic…" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="btn" id="micBtn" onclick="toggleVoice()" title="Voice input">🎤</button>
+      <button class="btn" onclick="sendMessage()">Send ➤</button>
+    </div>
+  </div>
+
+  <script>
+    const SESSION_ID = 'session_' + Math.random().toString(36).substr(2, 9);
+    document.getElementById('sessionInfo').textContent = `Session: ${SESSION_ID}`;
+
+    const messagesEl = document.getElementById('messages');
+    let recognition = null;
+    let isRecording = false;
+
+    function newChat() {
+      messagesEl.innerHTML = '';
+      fetch('/sessions/' + SESSION_ID, { method: 'DELETE' });
+      appendMessage('agent', "Hello! I'm your ShopEasy support agent. I can help you with refunds and order inquiries. How can I assist you today?");
+    }
+
+    // Welcome message
+    appendMessage('agent', "Hello! I'm your ShopEasy support agent. I can help you with refunds and order inquiries. How can I assist you today?");
+
+    function appendMessage(role, text) {
+      const div = document.createElement('div');
+      div.className = `msg ${role}`;
+      const initial = role === 'agent' ? '🤖' : 'You';
+      div.innerHTML = `
+        <div class="avatar">${initial}</div>
+        <div class="bubble">${escapeHtml(text).replace(/\n/g, '<br>')}</div>
+      `;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return div;
+    }
+
+    function showTyping() {
+      const div = document.createElement('div');
+      div.className = 'msg agent typing';
+      div.id = 'typingIndicator';
+      div.innerHTML = `<div class="avatar">🤖</div><div class="bubble"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>`;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function removeTyping() {
+      document.getElementById('typingIndicator')?.remove();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage('user', text);
+      input.value = '';
+      autoResize(input);
+
+      showTyping();
+
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: SESSION_ID, message: text })
+        });
+        const data = await res.json();
+        removeTyping();
+        appendMessage('agent', data.reply);
+        speakText(data.reply);
+      } catch (e) {
+        removeTyping();
+        appendMessage('agent', 'Sorry, there was an error connecting to the server. Please try again.');
+      }
+    }
+
+    function sendQuick(text) {
+      document.getElementById('userInput').value = text;
+      sendMessage();
+    }
+
+    function handleKey(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    function autoResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+    }
+
+    // voice input (web speech api)
+    function toggleVoice() {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert('Voice input not supported in this browser. Please use Chrome or Edge.');
+        return;
+      }
+
+      if (isRecording) {
+        recognition?.stop();
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = true;
+      recognition.continuous = false;
+
+      recognition.onstart = () => {
+        isRecording = true;
+        document.getElementById('micBtn').classList.add('recording');
+        document.getElementById('voiceStatus').textContent = '🔴 Listening…';
+        document.getElementById('voiceStatus').classList.add('active');
+      };
+
+      recognition.onresult = (e) => {
+        const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+        document.getElementById('userInput').value = transcript;
+        autoResize(document.getElementById('userInput'));
+        if (e.results[e.results.length - 1].isFinal) {
+          document.getElementById('voiceStatus').textContent = '✔ Captured. Sending…';
+          setTimeout(sendMessage, 400);
+        }
+      };
+
+      recognition.onerror = (e) => {
+        document.getElementById('voiceStatus').textContent = `Voice error: ${e.error}`;
+      };
+
+      recognition.onend = () => {
+        isRecording = false;
+        document.getElementById('micBtn').classList.remove('recording');
+        document.getElementById('voiceStatus').classList.remove('active');
+        setTimeout(() => { document.getElementById('voiceStatus').textContent = ''; }, 2000);
+      };
+
+      recognition.start();
+    }
+
+    // voice output (tts)
+    function speakText(text) {
+      if (!window.speechSynthesis) return;
+      // only speak first 220 chars to avoid long responses
+      const snippet = text.substring(0, 220);
+      const utter = new SpeechSynthesisUtterance(snippet);
+      utter.rate = 1.05;
+      utter.pitch = 1;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utter);
+    }
+  </script>
+</body>
+</html>

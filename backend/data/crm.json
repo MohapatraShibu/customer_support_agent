@@ -1,0 +1,280 @@
+[
+  {
+    "customer_id": "C001",
+    "name": "Alice Johnson",
+    "email": "alice.johnson@email.com",
+    "phone": "555-0101",
+    "orders": [
+      {
+        "order_id": "ORD-1001",
+        "product": "Wireless Headphones",
+        "amount": 89.99,
+        "purchase_date": "2026-05-20",
+        "status": "delivered",
+        "delivery_date": "2026-05-25"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C002",
+    "name": "Bob Martinez",
+    "email": "bob.martinez@email.com",
+    "phone": "555-0102",
+    "orders": [
+      {
+        "order_id": "ORD-1002",
+        "product": "Running Shoes",
+        "amount": 120.00,
+        "purchase_date": "2026-06-01",
+        "status": "delivered",
+        "delivery_date": "2026-06-05"
+      }
+    ],
+    "refund_history": [
+      {"order_id": "ORD-0800", "amount": 45.00, "reason": "wrong size", "date": "2026-01-15", "approved": true}
+    ],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C003",
+    "name": "Carol White",
+    "email": "carol.white@email.com",
+    "phone": "555-0103",
+    "orders": [
+      {
+        "order_id": "ORD-1003",
+        "product": "Coffee Maker",
+        "amount": 65.50,
+        "purchase_date": "2026-03-15",
+        "status": "delivered",
+        "delivery_date": "2026-03-21"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C004",
+    "name": "David Lee",
+    "email": "david.lee@email.com",
+    "phone": "555-0104",
+    "orders": [
+      {
+        "order_id": "ORD-1004",
+        "product": "Bluetooth Speaker",
+        "amount": 55.00,
+        "purchase_date": "2026-06-10",
+        "status": "delivered",
+        "delivery_date": "2026-06-14"
+      }
+    ],
+    "refund_history": [
+      {"order_id": "ORD-0900", "amount": 30.00, "reason": "defective", "date": "2026-03-10", "approved": true},
+      {"order_id": "ORD-0950", "amount": 80.00, "reason": "changed mind", "date": "2026-04-20", "approved": true},
+      {"order_id": "ORD-0980", "amount": 22.00, "reason": "not as described", "date": "2026-05-01", "approved": true}
+    ],
+    "account_standing": "flagged"
+  },
+  {
+    "customer_id": "C005",
+    "name": "Eva Green",
+    "email": "eva.green@email.com",
+    "phone": "555-0105",
+    "orders": [
+      {
+        "order_id": "ORD-1005",
+        "product": "Yoga Mat",
+        "amount": 35.00,
+        "purchase_date": "2026-06-08",
+        "status": "delivered",
+        "delivery_date": "2026-06-11"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C006",
+    "name": "Frank Brown",
+    "email": "frank.brown@email.com",
+    "phone": "555-0106",
+    "orders": [
+      {
+        "order_id": "ORD-1006",
+        "product": "Smart Watch",
+        "amount": 199.99,
+        "purchase_date": "2026-06-03",
+        "status": "delivered",
+        "delivery_date": "2026-06-07"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C007",
+    "name": "Grace Kim",
+    "email": "grace.kim@email.com",
+    "phone": "555-0107",
+    "orders": [
+      {
+        "order_id": "ORD-1007",
+        "product": "Desk Lamp",
+        "amount": 42.00,
+        "purchase_date": "2026-06-17",
+        "status": "in_transit",
+        "delivery_date": null
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C008",
+    "name": "Henry Wilson",
+    "email": "henry.wilson@email.com",
+    "phone": "555-0108",
+    "orders": [
+      {
+        "order_id": "ORD-1008",
+        "product": "Mechanical Keyboard",
+        "amount": 149.99,
+        "purchase_date": "2026-03-01",
+        "status": "delivered",
+        "delivery_date": "2026-03-05"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C009",
+    "name": "Iris Patel",
+    "email": "iris.patel@email.com",
+    "phone": "555-0109",
+    "orders": [
+      {
+        "order_id": "ORD-1009",
+        "product": "Air Purifier",
+        "amount": 89.00,
+        "purchase_date": "2026-06-10",
+        "status": "delivered",
+        "delivery_date": "2026-06-14"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C010",
+    "name": "Jack Thompson",
+    "email": "jack.thompson@email.com",
+    "phone": "555-0110",
+    "orders": [
+      {
+        "order_id": "ORD-1010",
+        "product": "Gaming Mouse",
+        "amount": 75.00,
+        "purchase_date": "2026-06-12",
+        "status": "delivered",
+        "delivery_date": "2026-06-16"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C011",
+    "name": "Karen Davis",
+    "email": "karen.davis@email.com",
+    "phone": "555-0111",
+    "orders": [
+      {
+        "order_id": "ORD-1011",
+        "product": "Blender",
+        "amount": 59.99,
+        "purchase_date": "2026-06-05",
+        "status": "delivered",
+        "delivery_date": "2026-06-09"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C012",
+    "name": "Leo Garcia",
+    "email": "leo.garcia@email.com",
+    "phone": "555-0112",
+    "orders": [
+      {
+        "order_id": "ORD-1012",
+        "product": "Laptop Stand",
+        "amount": 39.99,
+        "purchase_date": "2026-06-13",
+        "status": "delivered",
+        "delivery_date": "2026-06-16"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C013",
+    "name": "Mia Robinson",
+    "email": "mia.robinson@email.com",
+    "phone": "555-0113",
+    "orders": [
+      {
+        "order_id": "ORD-1013",
+        "product": "Sunglasses",
+        "amount": 28.00,
+        "purchase_date": "2026-06-14",
+        "status": "delivered",
+        "delivery_date": "2026-06-17"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C014",
+    "name": "Nathan Scott",
+    "email": "nathan.scott@email.com",
+    "phone": "555-0114",
+    "orders": [
+      {
+        "order_id": "ORD-1014",
+        "product": "Backpack",
+        "amount": 85.00,
+        "purchase_date": "2026-05-28",
+        "status": "delivered",
+        "delivery_date": "2026-06-01"
+      }
+    ],
+    "refund_history": [
+      {"order_id": "ORD-1000", "amount": 85.00, "reason": "defective zipper", "date": "2026-05-01", "approved": true}
+    ],
+    "account_standing": "good"
+  },
+  {
+    "customer_id": "C015",
+    "name": "Olivia Turner",
+    "email": "olivia.turner@email.com",
+    "phone": "555-0115",
+    "orders": [
+      {
+        "order_id": "ORD-1015",
+        "product": "Electric Toothbrush",
+        "amount": 49.99,
+        "purchase_date": "2026-06-10",
+        "status": "delivered",
+        "delivery_date": "2026-06-13"
+      }
+    ],
+    "refund_history": [],
+    "account_standing": "good"
+  }
+]

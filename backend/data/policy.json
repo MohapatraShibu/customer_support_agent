@@ -1,0 +1,56 @@
+{
+  "return_window_days": 30,
+  "refund_window_days": 30,
+  "max_refunds_per_year": 3,
+  "eligible_statuses": ["delivered"],
+  "non_refundable_categories": ["digital_goods", "perishables", "personalized_items"],
+  "requires_receipt": true,
+  "flagged_account_policy": "deny",
+  "rules": [
+    {
+      "id": "R1",
+      "name": "Return Window",
+      "description": "Refund requests must be made within 30 days of the delivery date.",
+      "condition": "days_since_delivery <= 30",
+      "action": "approve_if_true"
+    },
+    {
+      "id": "R2",
+      "name": "Order Status",
+      "description": "Only delivered orders are eligible for refunds. In-transit or pending orders are not eligible.",
+      "condition": "order_status == delivered",
+      "action": "approve_if_true"
+    },
+    {
+      "id": "R3",
+      "name": "Refund Abuse Prevention",
+      "description": "Customers who have made 3 or more refunds in the past 12 months are flagged and automatically denied.",
+      "condition": "refund_count_last_12_months < 3",
+      "action": "approve_if_true"
+    },
+    {
+      "id": "R4",
+      "name": "Flagged Account",
+      "description": "Accounts flagged for abuse are automatically denied refunds regardless of other conditions.",
+      "condition": "account_standing != flagged",
+      "action": "approve_if_true"
+    },
+    {
+      "id": "R5",
+      "name": "Non-Refundable Items",
+      "description": "Digital goods, perishables, and personalized items are non-refundable under any circumstances.",
+      "condition": "product_category not in non_refundable_categories",
+      "action": "approve_if_true"
+    },
+    {
+      "id": "R6",
+      "name": "Valid Order",
+      "description": "The order ID must exist in the customer's purchase history.",
+      "condition": "order_exists_in_customer_profile",
+      "action": "approve_if_true"
+    }
+  ],
+  "approved_reasons": ["defective", "wrong_item", "not_as_described", "damaged_in_shipping", "never_arrived"],
+  "discretionary_reasons": ["changed_mind", "wrong_size", "duplicate_order"],
+  "auto_deny_reasons": ["used_item", "missing_parts_after_use", "policy_abuse"]
+}

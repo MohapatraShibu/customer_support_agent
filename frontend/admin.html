@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopEasy Admin Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo { font-size: 1.2rem; font-weight: 700; color: #f59e0b; }
+    .logo span { color: #e2e8f0; }
+
+    .header-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-left: 16px;
+      transition: color .2s;
+    }
+    .header-links a:hover { color: #f59e0b; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px;
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #64748b;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Sessions panel */
+    #sessionList { display: flex; flex-direction: column; gap: 8px; }
+
+    .session-item {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: border-color .2s;
+    }
+    .session-item:hover, .session-item.active { border-color: #f59e0b; }
+    .session-id { font-size: 0.82rem; font-family: monospace; color: #38bdf8; }
+    .session-meta { font-size: 0.75rem; color: #64748b; }
+
+    /* Logs panel */
+    #logsPanel {
+      grid-column: 1 / -1;
+      min-height: 300px;
+    }
+
+    #logsList {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .log-entry {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      border-left: 3px solid #334155;
+      animation: fadeIn .2s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+
+    .log-entry.tool_call { border-color: #f59e0b; }
+    .log-entry.tool_result { border-color: #22c55e; }
+    .log-entry.response { border-color: #38bdf8; }
+
+    .log-type {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 4px;
+    }
+    .log-entry.tool_call .log-type { color: #f59e0b; }
+    .log-entry.tool_result .log-type { color: #22c55e; }
+    .log-entry.response .log-type { color: #38bdf8; }
+
+    .log-body { color: #94a3b8; line-height: 1.5; word-break: break-word; }
+    .log-body code { color: #e2e8f0; background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; }
+
+    /* CRM table */
+    #crmPanel { grid-column: 1 / -1; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th {
+      text-align: left;
+      padding: 8px 12px;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      border-bottom: 1px solid #334155;
+    }
+    td { padding: 10px 12px; border-bottom: 1px solid #1e293b; }
+    tr:hover td { background: #1e293b; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .badge.good { background: #14532d; color: #4ade80; }
+    .badge.flagged { background: #7f1d1d; color: #f87171; }
+    .badge.delivered { background: #1e3a5f; color: #38bdf8; }
+    .badge.in_transit { background: #3b2700; color: #f59e0b; }
+
+    .refresh-btn {
+      background: none;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .refresh-btn:hover { border-color: #f59e0b; color: #f59e0b; }
+
+    .empty-state { color: #475569; font-size: 0.85rem; text-align: center; padding: 24px; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Shop<span>Easy</span> <span style="color:#f59e0b">Admin</span></div>
+    <div class="header-links">
+      <a href="/">← Customer Chat</a>
+      <a href="#" onclick="refreshAll()">⟳ Refresh</a>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- Active Sessions -->
+    <div class="card">
+      <div class="card-title">
+        Active Sessions
+        <button class="refresh-btn" onclick="loadSessions()">Refresh</button>
+      </div>
+      <div id="sessionList"><div class="empty-state">No active sessions yet</div></div>
+    </div>
+
+    <!-- Live Logs -->
+    <div class="card">
+      <div class="card-title">
+        Agent Reasoning Logs
+        <span id="selectedSession" style="font-size:.75rem;color:#38bdf8;font-weight:400;">Select a session</span>
+      </div>
+      <div id="logsList"><div class="empty-state">Select a session to view reasoning logs</div></div>
+    </div>
+
+    <!-- CRM Table -->
+    <div class="card" id="crmPanel">
+      <div class="card-title">
+        CRM — Customer Profiles
+        <button class="refresh-btn" onclick="loadCustomers()">Refresh</button>
+      </div>
+      <div id="crmTableWrap"><div class="empty-state">Loading…</div></div>
+    </div>
+
+  </div>
+
+  <script>
+    let selectedSession = null;
+    let autoRefreshInterval = null;
+
+    async function loadSessions() {
+      const res = await fetch('/sessions');
+      const data = await res.json();
+      const el = document.getElementById('sessionList');
+      if (!data.length) {
+        el.innerHTML = '<div class="empty-state">No active sessions yet</div>';
+        return;
+      }
+      el.innerHTML = data.map(s => `
+        <div class="session-item ${selectedSession === s.session_id ? 'active' : ''}"
+             onclick="selectSession('${s.session_id}')">
+          <span class="session-id">${s.session_id}</span>
+          <span class="session-meta">${s.message_count} msgs · ${s.log_count} logs</span>
+        </div>
+      `).join('');
+    }
+
+    async function selectSession(id) {
+      selectedSession = id;
+      document.getElementById('selectedSession').textContent = id;
+      loadSessions();
+      await loadLogs(id);
+      clearInterval(autoRefreshInterval);
+      autoRefreshInterval = setInterval(() => loadLogs(id), 2500);
+    }
+
+    async function loadLogs(id) {
+      const res = await fetch(`/logs/${id}`);
+      const data = await res.json();
+      const el = document.getElementById('logsList');
+      if (!data.logs.length) {
+        el.innerHTML = '<div class="empty-state">No logs yet for this session</div>';
+        return;
+      }
+      el.innerHTML = data.logs.map((log, i) => {
+        let body = '';
+        if (log.type === 'tool_call') {
+          body = `Calling <code>${log.tool}</code> with args: <code>${JSON.stringify(log.args)}</code>`;
+        } else if (log.type === 'tool_result') {
+          let resultText = log.result;
+          try {
+            const parsed = JSON.parse(log.result);
+            resultText = JSON.stringify(parsed, null, 2);
+          } catch {}
+          body = `<code>${log.tool}</code> returned:<br><pre style="margin-top:4px;overflow:auto;max-height:120px;color:#e2e8f0;background:#0f172a;padding:8px;border-radius:6px;font-size:0.78rem">${escapeHtml(resultText)}</pre>`;
+        } else {
+          body = escapeHtml(log.content || '');
+        }
+        return `
+          <div class="log-entry ${log.type}">
+            <div class="log-type">${log.type.replace('_', ' ')} #${i + 1}</div>
+            <div class="log-body">${body}</div>
+          </div>
+        `;
+      }).join('');
+      el.scrollTop = el.scrollHeight;
+    }
+
+    async function loadCustomers() {
+      const res = await fetch('/customers');
+      const customers = await res.json();
+      const wrap = document.getElementById('crmTableWrap');
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>Email</th><th>Standing</th>
+              <th>Orders</th><th>Refund History</th><th>Latest Order</th><th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${customers.map(c => {
+              const latest = c.orders[c.orders.length - 1];
+              return `
+                <tr>
+                  <td><code style="color:#38bdf8">${c.customer_id}</code></td>
+                  <td>${c.name}</td>
+                  <td style="color:#94a3b8">${c.email}</td>
+                  <td><span class="badge ${c.account_standing}">${c.account_standing}</span></td>
+                  <td>${c.orders.length}</td>
+                  <td>${c.refund_count}</td>
+                  <td>
+                    <code style="color:#94a3b8">${latest.order_id}</code>
+                    — ${latest.product}
+                    <span class="badge ${latest.status}">${latest.status}</span>
+                  </td>
+                  <td>$${latest.amount.toFixed(2)}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function refreshAll() {
+      loadSessions();
+      loadCustomers();
+      if (selectedSession) loadLogs(selectedSession);
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Auto-refresh sessions every 5s
+    setInterval(loadSessions, 5000);
+
+    // Initial load
+    loadSessions();
+    loadCustomers();
+  </script>
+</body>
+</html>
